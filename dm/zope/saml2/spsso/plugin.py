@@ -26,7 +26,6 @@ from dm.zope.saml2.interfaces import ISimpleSpssoPluginSchema, \
      ISimpleSpsso
 
 from .spsso import SimpleSpsso
-from plone import api
 
 
 @implementer(ISimpleSpssoPluginSchema)
@@ -55,9 +54,6 @@ class DetachedSimpleSpssoPlugin(BasePlugin, SchemaConfigured):
     info = spsso.get_authentication_session(self.REQUEST)
     if info is not None:
       uid = info["user_id"]
-      olduser = api.user.get(username=uid)
-      if olduser is None:
-        newuser = api.user.create(email=uid, username=uid)
       return (uid, uid)
 
   def resetCredentials(self, request, response):

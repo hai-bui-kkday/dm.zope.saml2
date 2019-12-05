@@ -32,6 +32,7 @@ from dm.zope.saml2.role import Target
 from dm.zope.saml2.attribute import \
      HomogenousContainer, AttributeConsumingService
 
+from plone import api
 
 @implementer(ISimpleSpsso)
 class SimpleSpsso(HomogenousContainer, Sso):
@@ -117,6 +118,10 @@ class SimpleSpsso(HomogenousContainer, Sso):
       authn_context_class=s.AuthnContext.AuthnContextClassRef,
       )
     info["user_id"] = self.format_user_id(info)
+    uid = info["user_id"]
+    olduser = api.user.get(username=uid)
+    if olduser is None:
+      newuser = api.user.create(email=uid, username=uid)
     self._set_cookie(self.session_cookie_name, info)
 
   def _process_AttributeStatement(self, subject, s):
