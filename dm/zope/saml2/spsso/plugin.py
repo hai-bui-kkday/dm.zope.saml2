@@ -118,6 +118,9 @@ class DetachedSimpleSpssoPlugin(BasePlugin, SchemaConfigured):
         ))
 
   def getPropertiesForUser(self, user, request=None):
+    if not hasattr(self, 'REQUEST'):
+      return {}
+    
     info = self.get_spsso().get_attributes(self.REQUEST) or {}
     if str is bytes: # Python 2
       # the stupid Plone is unable to handle unicode properties
